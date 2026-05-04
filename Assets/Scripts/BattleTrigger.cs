@@ -14,7 +14,5 @@ public class BattleTrigger : MonoBehaviour
 
         _used = true;
         if (battleUI   != null) battleUI.SetActive(true);
-        if (worldEnemy != null) worldEnemy.SetActive(false);
-        gameObject.SetActive(false);
     }
 }

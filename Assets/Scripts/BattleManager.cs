@@ -23,6 +23,8 @@ public class BattleManager : MonoBehaviour
     [Header("Enemies")]
     public List<EnemyData> enemies;
 
+    public List<GameObject> enemyInGroup;
+
     // ── UI ─────────────────────────────
     [Header("Player UI")]
     public TextMeshProUGUI playerHPText;
@@ -36,13 +38,17 @@ public class BattleManager : MonoBehaviour
     [Header("Enemy HP Labels")]
     public List<HPLabel> enemyHPLabels;
 
-    [Header("Target Buttons")]
-    public List<Button> enemySelectBtns;
+    [Header("Canvas After Win")]
+
+    public Canvas battleUICanvas;
+
+    // [Header("Target Buttons")]
+    // public List<Button> enemySelectBtns;
 
     // ── Runtime ─────────────────────────────
-    int playerHP;
-    int skillPoint;
-    int _target;
+    int playerHP; // เลือด
+    int skillPoint; // skill point
+    int _target; // target enemy เล็งตัวไหนอยู่
 
     List<int> _enemyHP = new List<int>();
 
@@ -214,13 +220,26 @@ public class BattleManager : MonoBehaviour
             }
         }
 
+        if (_enemyHP[_target] <= 0 )
+        {
+            Log(enemies[_target].enemyName + " is defeated!");
+            
+            Destroy(enemyInGroup[_target]);
+            enemyInGroup[_target] = null;
+        }
+            yield return new WaitForSeconds(1f);
+
+            FindNextTarget();
+            RefreshUI();
+
+        
         if (allDead)
         {
-            Log("You Won!");
+            StartCoroutine(Victory());
             yield break;
         }
 
-        StartCoroutine(EnemyTurn());
+    StartCoroutine(EnemyTurn());
     }
 
     // ─────────────────────────────
@@ -258,8 +277,20 @@ public class BattleManager : MonoBehaviour
         PlayerTurn();
     }
 
+    void FindNextTarget()
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (_enemyHP[i] > 0)
+            {
+                _target = i;
+                return;
+            }
+        }
+    }
+
     // ─────────────────────────────
-    void RefreshUI()
+    void RefreshUI() // ใช้ update UI (พึ่งมารู้ว่า UI ไม่อัปเดตอัตโนมัติ!!!!)
     {
         if (playerHPText != null)
             playerHPText.text = $"HP: {playerHP} / {playerMaxHP}";
@@ -268,7 +299,7 @@ public class BattleManager : MonoBehaviour
             spText.text = $"SP: {skillPoint} / {maxSP}";
 
         if (enemyHealthUI != null)
-            enemyHealthUI.text = "Enemy HP " + _enemyHP[_target] + " / " + enemies[_target].maxHP;
+            enemyHealthUI.text = $"Enemy: {enemies[_target].enemyName}\n HP: {_enemyHP[_target]} / {enemies[_target].maxHP}";
 
         for (int i = 0; i < enemies.Count; i++)
         {
@@ -296,4 +327,17 @@ public class BattleManager : MonoBehaviour
         if (logText != null)
             logText.text = msg;
     }
+
+ 
+    IEnumerator Victory()
+    {
+        Log("You Won!");
+        yield return new WaitForSeconds(1.5f);
+        Debug.Log("Enemies Defeated.");
+        battleUICanvas.gameObject.SetActive(false);
+        
+
+    }
+
+    
 }

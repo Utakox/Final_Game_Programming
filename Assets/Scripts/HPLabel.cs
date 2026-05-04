@@ -17,6 +17,7 @@ public class HPLabel : MonoBehaviour
 
     public void SetHP(int current, int max)
     {
+
         hpText.text = $"{current} / {max}";
     }
 
