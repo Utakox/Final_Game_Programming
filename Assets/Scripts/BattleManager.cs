@@ -35,6 +35,10 @@ public class BattleManager : MonoBehaviour
     public Button attackButton;
     public Button skillButton;
 
+    // [Header("Camera")]
+    // public Camera battleCamera;
+    // public Camera playerCamera;
+
     [Header("Enemy HP Labels")]
     public List<HPLabel> enemyHPLabels;
 
@@ -57,25 +61,25 @@ public class BattleManager : MonoBehaviour
     // ─────────────────────────────
     void Start()
     {
-        playerHP = playerMaxHP;
-        skillPoint = 0;
-        _target = 0;
-
-        _enemyHP.Clear();
-
-        foreach (EnemyData e in enemies)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            _enemyHP.Add(e.maxHP);
+            enemyHPLabels[i].SetHP(enemies[i].maxHP, enemies[i].maxHP);
         }
+    // รอ BattleTrigger เรียก InitBattle() แทน
+    }
 
-        // for (int i = 0; i < enemySelectBtns.Count; i++)
-        // {
-        //     int index = i;
-        //     enemySelectBtns[i].onClick.AddListener(() => SelectTarget(index));
-        // }
+    public void InitBattle()
+    {
+    playerHP   = playerMaxHP;
+    skillPoint = 0;
+    _target    = 0;
 
-        RefreshUI();
-        StartCoroutine(BattleStart());
+    _enemyHP.Clear();
+    foreach (EnemyData e in enemies)
+        _enemyHP.Add(e.maxHP);
+
+    RefreshUI();
+    StartCoroutine(BattleStart());
     }
 
     void NextTarget()
@@ -99,7 +103,6 @@ public class BattleManager : MonoBehaviour
     IEnumerator BattleStart()
     {
         SetActionButtons(false);
-        enemyHealthUI.gameObject.SetActive(true);
 
         Log("Battle Start!");
 
@@ -305,10 +308,6 @@ public class BattleManager : MonoBehaviour
         {
             if (i >= enemyHPLabels.Count) continue;
             if (enemyHPLabels[i] == null) continue;
-
-            if (_enemyHP[i] <= 0)
-                enemyHPLabels[i].SetLabel("Dead");
-            else
                 enemyHPLabels[i].SetHP(_enemyHP[i], enemies[i].maxHP);
         }
     }
@@ -333,7 +332,6 @@ public class BattleManager : MonoBehaviour
     {
         Log("You Won!");
         yield return new WaitForSeconds(1.5f);
-        Debug.Log("Enemies Defeated.");
         battleUICanvas.gameObject.SetActive(false);
         
 
