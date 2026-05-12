@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonController : MonoBehaviour
@@ -25,30 +26,59 @@ public class ThirdPersonController : MonoBehaviour
     float _rotY;
     float _velY;
     bool  _altMode;
-    bool  _wasInDialouge = false; // tracks previous frame's state
+    bool  _wasInDialouge = false;
+
+    void Awake()
+    {
+        // Subscribe to scene loaded so we can re-fetch the camera after transitions
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Re-fetch Camera.main in the new scene
+        cam = Camera.main;
+
+        if (cam == null)
+            Debug.LogWarning("ThirdPersonController: No Camera.main found in scene: " + scene.name);
+    }
 
     void Start()
     {
         _cc = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible   = false;
+
+        // Fallback: grab camera on start if not assigned in Inspector
+        if (cam == null)
+            cam = Camera.main;
     }
 
     void Update()
     {
+        // Safety: if camera is missing, try to find it before doing anything
+        if (cam == null)
+        {
+            cam = Camera.main;
+            if (cam == null) return; // still not found, skip frame
+        }
+
         // --- Handle dialogue lock/unlock transitions ---
         if (dialouge != _wasInDialouge)
         {
             if (dialouge)
             {
-                // Entering dialogue: free the cursor
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible   = true;
-                _altMode         = false; // cancel alt mode if it was active
+                _altMode         = false;
             }
             else
             {
-                // Leaving dialogue: re-lock the cursor
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible   = false;
             }
@@ -58,7 +88,7 @@ public class ThirdPersonController : MonoBehaviour
         // --- Block all input while in dialogue ---
         if (dialouge) return;
 
-        // Alt toggle (only active outside dialogue)
+        // Alt toggle
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
             _altMode         = true;
@@ -113,7 +143,6 @@ public class ThirdPersonController : MonoBehaviour
 
     void LateUpdate()
     {
-        // Camera still follows the player during dialogue (it just can't rotate)
         if (cam == null) return;
 
         Vector3 pivot = cameraTarget != null
