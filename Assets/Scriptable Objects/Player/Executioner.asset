@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec4ddf1f2fcdd14988ce2de73d586db, type: 3}
+  m_Name: Executioner
+  m_EditorClassIdentifier: Assembly-CSharp::HeroData
+  heroName: Executioner
+  heroDescription: A hero description
+  heroClass: 1
+  maxHP: 180
+  attackPower: 20
+  skillPower: 50
+  maxSP: 5
+  spCost: 4
+  spGainAttack: 1
+  spGainSkill: 0
+  ultimatePower: 80
+  ultimateCost: 140
+  ultGainAttack: 20
+  ultGainSkill: 40
+  canHeal: 0
+  healAmount: 0
+  doubleHitChance: 0.5
+  execDoubleHitChance: 0.2
+  execBonusUlt: 20
+  atkDebuff: 1
+  skillVideo: {fileID: 0}
+  ultimateVideo: {fileID: 0}

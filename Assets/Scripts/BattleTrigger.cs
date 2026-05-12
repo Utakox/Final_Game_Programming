@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// วางบน Collider ของศัตรูแต่ละตัวใน world
+// ไม่ต้องมี BattleManager ของตัวเอง — ใช้อันเดียวใน Scene ร่วมกัน
 public class BattleTrigger : MonoBehaviour
 {
-    public GameObject    battleUI;
-    public BattleManager battleManager;
-    public List<EnemyData>   enemies;
-    public List<GameObject>  enemyInGroup;
+    [Header("ศัตรูในการต่อสู้นี้")]
+    public List<EnemyData>  enemies;
+    public List<GameObject> enemyInGroup;  // GameObject ของศัตรูใน world
 
     bool _used;
 
@@ -17,13 +18,15 @@ public class BattleTrigger : MonoBehaviour
 
         _used = true;
 
-        // ส่งข้อมูลก่อน แล้วค่อย init
-        battleManager.enemies      = enemies;
-        battleManager.enemyInGroup = enemyInGroup;
+        // หา BattleManager อันเดียวใน Scene
+        BattleManager bm = BattleManager.Instance;
 
-        if (battleUI != null) battleUI.SetActive(true);
+        if (bm == null)
+        {
+            Debug.LogError("ไม่พบ BattleManager ใน Scene!");
+            return;
+        }
 
-        // เรียก init หลังจาก set enemies เสร็จแล้ว
-        battleManager.InitBattle();
+        bm.StartBattleFromTrigger(enemies, enemyInGroup);
     }
 }
