@@ -15,23 +15,22 @@ MonoBehaviour:
   heroName: Archer
   heroDescription: A hero description
   heroClass: 2
-  maxHP: 100
-  attackPower: 15
-  skillPower: 40
-  maxSP: 5
-  spCost: 2
+  maxHP: 80
+  attackPower: 20
+  skillPower: 35
+  maxSP: 8
+  spCost: 1
   spGainAttack: 1
-  spGainSkill: 0
-  ultimatePower: 50
-  ultimateCost: 80
+  spGainSkill: 2
+  ultimatePower: 40
+  ultimateCost: 70
   ultGainAttack: 15
-  ultGainSkill: 20
+  ultGainSkill: 30
   canHeal: 0
   healAmount: 0
   doubleHitChance: 0.5
   execDoubleHitChance: 0.4
   execBonusUlt: 20
-  debuffAmount: 2
-  debuffFloor: 1
+  atkDebuff: 1
   skillVideo: {fileID: 0}
   ultimateVideo: {fileID: 0}

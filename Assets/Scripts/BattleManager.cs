@@ -30,10 +30,12 @@ public class BattleManager : MonoBehaviour
     int                      _sp;
     int                      _ultimate;
     int                      _target;
-    List<EnemyData>          _enemies        = new List<EnemyData>();
-    List<GameObject>         _enemyInGroup   = new List<GameObject>();
-    List<int>                _enemyHP        = new List<int>();
-    List<EnemyHPDisplay>     _enemyDisplays  = new List<EnemyHPDisplay>();
+    List<EnemyData>          _enemies             = new List<EnemyData>();
+    List<GameObject>         _enemyInGroup        = new List<GameObject>();
+    List<int>                _enemyHP             = new List<int>();
+    List<int>                _enemyAttackPower    = new List<int>();
+    List<int>                _enemyHeavyAttackPower = new List<int>();
+    List<EnemyHPDisplay>     _enemyDisplays       = new List<EnemyHPDisplay>();
     bool                     _playerTurn;
 
     // ═════════════════════════════════════════
@@ -70,8 +72,15 @@ public class BattleManager : MonoBehaviour
         _target   = 0;
 
         _enemyHP.Clear();
+        _enemyAttackPower.Clear();
+        _enemyHeavyAttackPower.Clear();
+
         foreach (EnemyData e in _enemies)
+        {
             _enemyHP.Add(e.maxHP);
+            _enemyAttackPower.Add(e.attackPower);
+            _enemyHeavyAttackPower.Add(e.skillPower);
+        }
 
         // หา EnemyHPDisplay จากตัวศัตรูแต่ละตัว
         _enemyDisplays.Clear();
@@ -178,23 +187,37 @@ public class BattleManager : MonoBehaviour
         _playerTurn = false;
         SetAllButtons(false);
 
-        int dmg = _hero.skillPower;
-        _enemyHP[_target] -= dmg;
-
-        if (_enemyHP[_target] < 0)
-            _enemyHP[_target] = 0;
-
         _sp -= _hero.spCost;
         _sp += _hero.spGainSkill;
 
         if (_sp < 0)
             _sp = 0;
 
+        if (_sp > _hero.maxSP)
+            _sp = _hero.maxSP;
+
         _ultimate += _hero.ultGainSkill;
         if (_ultimate > _hero.ultimateCost)
             _ultimate = _hero.ultimateCost;
 
-        Log(_hero.heroName + " uses Skill on " + _enemies[_target].enemyName + " for " + dmg + "!");
+        // ── สร้าง SkillData แล้วส่งให้ HeroSkills จัดการ ──
+        HeroSkills.SkillData skillData = new HeroSkills.SkillData();
+        skillData.Hero                  = _hero;
+        skillData.Target                = _target;
+        skillData.EnemyHP               = _enemyHP;
+        skillData.EnemyAttackPower      = _enemyAttackPower;
+        skillData.EnemyHeavyAttackPower = _enemyHeavyAttackPower;
+        skillData.PlayerHP              = _playerHP;
+        skillData.Ultimate              = _ultimate;
+        skillData.Message               = "";
+
+        HeroSkills.UseSkill(skillData);
+
+        // ── รับค่ากลับจาก SkillData ──
+        _playerHP = skillData.PlayerHP;
+        _ultimate = skillData.Ultimate;
+
+        Log(skillData.Message);
         RefreshUI();
         StartCoroutine(DoSkill());
     }
@@ -240,7 +263,7 @@ public class BattleManager : MonoBehaviour
         if (BattleStage.Instance != null)
             yield return BattleStage.Instance.PlayerUltimateAnimation(_hero.heroName, _target);
         else
-            yield return new WaitForSeconds(2.8f);
+            yield return new WaitForSeconds(3f);
 
         yield return AfterPlayer();
     }
@@ -313,39 +336,37 @@ public class BattleManager : MonoBehaviour
             Log(_enemies[i].enemyName + "'s Turn");
             yield return new WaitForSeconds(0.8f);
 
-           // ── เช็คฮิลก่อน ──
+            // ── เช็คฮิลก่อน ──
             if (_enemies[i].canHeal)
-        {
-        if (Random.value < _enemies[i].healChance)
-        {
-        int healTarget = FindHealTarget();
+            {
+                if (Random.value < _enemies[i].healChance)
+                {
+                    int healTarget = FindHealTarget();
 
-        if (healTarget >= 0)
-        {
-            int healed = _enemies[i].healAmount;
-            _enemyHP[healTarget] += healed;
+                    if (healTarget >= 0)
+                    {
+                        int healed = _enemies[i].healAmount;
+                        _enemyHP[healTarget] += healed;
 
-            if (_enemyHP[healTarget] > _enemies[healTarget].maxHP)
-                _enemyHP[healTarget] = _enemies[healTarget].maxHP;
+                        if (_enemyHP[healTarget] > _enemies[healTarget].maxHP)
+                            _enemyHP[healTarget] = _enemies[healTarget].maxHP;
 
-            Log(_enemies[i].enemyName + " heals " + _enemies[healTarget].enemyName + " for " + healed + "!");
-            RefreshUI();
-            yield return new WaitForSeconds(1.5f);
-            continue;
-        }
-    }
-}
-
-// -----------------------------
+                        Log(_enemies[i].enemyName + " heals " + _enemies[healTarget].enemyName + " for " + healed + "!");
+                        RefreshUI();
+                        yield return new WaitForSeconds(1.5f);
+                        continue;
+                    }
+                }
+            }
 
             // ── โจมตีปกติ ──
             bool heavy = Random.value > _enemies[i].normalAttackChance;
 
             int rawDmg;
             if (heavy)
-                rawDmg = _enemies[i].skillPower;
+                rawDmg = _enemyHeavyAttackPower[i];
             else
-                rawDmg = _enemies[i].attackPower;
+                rawDmg = _enemyAttackPower[i];
 
             int dmg = rawDmg;
             if (dmg < 1)
@@ -376,28 +397,29 @@ public class BattleManager : MonoBehaviour
         PlayerTurn();
     }
 
+    // ═════════════════════════════════════════
     int FindHealTarget()
-{
-    int bestIndex = -1;
-    int lowestHP  = int.MaxValue;
-
-    for (int i = 0; i < _enemies.Count; i++)
     {
-        if (_enemyHP[i] <= 0)
-            continue;
+        int bestIndex = -1;
+        int lowestHP  = int.MaxValue;
 
-        if (_enemyHP[i] >= _enemies[i].maxHP)
-            continue;
-
-        if (_enemyHP[i] < lowestHP)
+        for (int i = 0; i < _enemies.Count; i++)
         {
-            lowestHP  = _enemyHP[i];
-            bestIndex = i;
-        }
-    }
+            if (_enemyHP[i] <= 0)
+                continue;
 
-    return bestIndex;
-}
+            if (_enemyHP[i] >= _enemies[i].maxHP)
+                continue;
+
+            if (_enemyHP[i] < lowestHP)
+            {
+                lowestHP  = _enemyHP[i];
+                bestIndex = i;
+            }
+        }
+
+        return bestIndex;
+    }
 
     // ═════════════════════════════════════════
     void FindNextTarget()

@@ -26,12 +26,13 @@ public static class HeroSkills
             case HeroClass.Executioner: Executioner(data); break;
             case HeroClass.Archmage:    Archmage(data);    break;
             case HeroClass.Ambassador:  Ambassador(data);  break;
+            case HeroClass.Archer:      Archer(data);      break;
             default:                    Default(data);     break;
         }
     }
 
     // =========================================
-    // Skill แต่ละ Class — แก้ที่นี่ได้เลย
+    // Skill แต่ละ Class
     // =========================================
 
     // Swordmaster: มีโอกาสได้ชาจอัลติ 2 ครั้ง
@@ -42,17 +43,17 @@ public static class HeroSkills
 
         data.EnemyHP[data.Target] -= dmg;
 
-        data.Message = data.Hero.heroName + " strikes! took " + dmg + "!";
-
         if (data.EnemyHP[data.Target] < 0)
             data.EnemyHP[data.Target] = 0;
+
+        data.Message = data.Hero.heroName + " strikes! took " + dmg + "!";
 
         if (doubleHit)
         {
             data.Ultimate += data.Hero.ultGainSkill;
             if (data.Ultimate > data.Hero.ultimateCost)
                 data.Ultimate = data.Hero.ultimateCost;
-            data.Message = data.Hero.heroName + " Gains Double Ult Charge!" + "\n" +data.Hero.ultGainSkill + " Ult gained!";
+            data.Message = data.Hero.heroName + " Gains Double Ult Charge!" + "\n" + data.Hero.ultGainSkill + " Ult gained!";
         }
     }
 
@@ -112,17 +113,31 @@ public static class HeroSkills
         }
     }
 
-    // Ambassador: ลด Attack ศัตรูถาวร 
+    // Ambassador: ลด Attack ศัตรูถาวร
     static void Ambassador(SkillData data)
     {
         data.EnemyAttackPower[data.Target] -= data.Hero.atkDebuff;
 
-        if (data.EnemyAttackPower[data.Target] < 1) // สมมติว่า debuff ไม่ให้ต่ำกว่า 1
-            data.EnemyAttackPower[data.Target] -= 1;
+        // แก้ bug: เดิมเขียน -= 1 ทำให้ลดต่อไปเรื่อยๆ ต้องเป็น = 1
+        if (data.EnemyAttackPower[data.Target] < 1)
+            data.EnemyAttackPower[data.Target] = 1;
+
         data.Message = data.Hero.heroName + " weakens enemy! Attack reduced to " + data.EnemyAttackPower[data.Target] + "!";
     }
 
-    // Default: ดาเมจปกติ ใช้กับ Class ที่ยังไม่ได้กำหนด เช่น Archer
+    // Archer: ยิงธนู
+    static void Archer(SkillData data)
+    {
+        int dmg = data.Hero.skillPower;
+
+        data.EnemyHP[data.Target] -= dmg;
+
+        if (data.EnemyHP[data.Target] < 0)
+            data.EnemyHP[data.Target] = 0;
+
+        data.Message = data.Hero.heroName + " shoots an arrow! took " + dmg + "!";
+    }
+
     static void Default(SkillData data)
     {
         int dmg = data.Hero.skillPower;
