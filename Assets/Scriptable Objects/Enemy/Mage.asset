@@ -19,4 +19,4 @@ MonoBehaviour:
   normalAttackChance: 0.57
   canHeal: 1
   healAmount: 15
-  healChance: 0.5
+  healChance: 1

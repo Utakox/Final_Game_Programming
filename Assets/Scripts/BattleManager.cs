@@ -313,6 +313,32 @@ public class BattleManager : MonoBehaviour
             Log(_enemies[i].enemyName + "'s Turn");
             yield return new WaitForSeconds(0.8f);
 
+           // ── เช็คฮิลก่อน ──
+            if (_enemies[i].canHeal)
+        {
+        if (Random.value < _enemies[i].healChance)
+        {
+        int healTarget = FindHealTarget();
+
+        if (healTarget >= 0)
+        {
+            int healed = _enemies[i].healAmount;
+            _enemyHP[healTarget] += healed;
+
+            if (_enemyHP[healTarget] > _enemies[healTarget].maxHP)
+                _enemyHP[healTarget] = _enemies[healTarget].maxHP;
+
+            Log(_enemies[i].enemyName + " heals " + _enemies[healTarget].enemyName + " for " + healed + "!");
+            RefreshUI();
+            yield return new WaitForSeconds(1.5f);
+            continue;
+        }
+    }
+}
+
+// -----------------------------
+
+            // ── โจมตีปกติ ──
             bool heavy = Random.value > _enemies[i].normalAttackChance;
 
             int rawDmg;
@@ -349,6 +375,29 @@ public class BattleManager : MonoBehaviour
 
         PlayerTurn();
     }
+
+    int FindHealTarget()
+{
+    int bestIndex = -1;
+    int lowestHP  = int.MaxValue;
+
+    for (int i = 0; i < _enemies.Count; i++)
+    {
+        if (_enemyHP[i] <= 0)
+            continue;
+
+        if (_enemyHP[i] >= _enemies[i].maxHP)
+            continue;
+
+        if (_enemyHP[i] < lowestHP)
+        {
+            lowestHP  = _enemyHP[i];
+            bestIndex = i;
+        }
+    }
+
+    return bestIndex;
+}
 
     // ═════════════════════════════════════════
     void FindNextTarget()
