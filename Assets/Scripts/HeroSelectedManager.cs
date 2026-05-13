@@ -26,7 +26,7 @@ public class HeroSelectManager : MonoBehaviour
     public Button          confirmButton;
 
     [Header("ชื่อ Scene ที่จะไป")]
-    public string worldSceneName = "GameScene";
+    public string worldSceneName = "Desert";
 
     HeroData _selected;
 

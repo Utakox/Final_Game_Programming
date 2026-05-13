@@ -33,4 +33,4 @@ MonoBehaviour:
   execBonusUlt: 20
   atkDebuff: 1
   skillVideo: {fileID: 0}
-  ultimateVideo: {fileID: 0}
+  ultimateVideo: {fileID: 32900000, guid: 1496f5f83d73295459cbf10ef20c1bfe, type: 3}

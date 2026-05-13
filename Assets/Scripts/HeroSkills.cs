@@ -118,9 +118,19 @@ public static class HeroSkills
     {
         data.EnemyAttackPower[data.Target] -= data.Hero.atkDebuff;
 
+        int dmg = data.Hero.skillPower;
+
+        data.EnemyHP[data.Target] -= dmg;
+
+        if (data.EnemyHP[data.Target] < 0)
+            data.EnemyHP[data.Target] = 0;
+
         // แก้ bug: เดิมเขียน -= 1 ทำให้ลดต่อไปเรื่อยๆ ต้องเป็น = 1
         if (data.EnemyAttackPower[data.Target] < 1)
             data.EnemyAttackPower[data.Target] = 1;
+
+        if (data.EnemyHeavyAttackPower[data.Target] < 1)
+            data.EnemyHeavyAttackPower[data.Target] = 1;
 
         data.Message = data.Hero.heroName + " weakens enemy! Attack reduced to " + data.EnemyAttackPower[data.Target] + "!";
     }

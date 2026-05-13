@@ -82,16 +82,6 @@ public class BattleManager : MonoBehaviour
             _enemyHeavyAttackPower.Add(e.skillPower);
         }
 
-        // หา EnemyHPDisplay จากตัวศัตรูแต่ละตัว
-        _enemyDisplays.Clear();
-        foreach (GameObject obj in _enemyInGroup)
-        {
-            if (obj != null)
-                _enemyDisplays.Add(obj.GetComponent<EnemyHPDisplay>());
-            else
-                _enemyDisplays.Add(null);
-        }
-
         if (battleUICanvas != null)
             battleUICanvas.gameObject.SetActive(true);
 
@@ -100,6 +90,16 @@ public class BattleManager : MonoBehaviour
 
         if (BattleStage.Instance != null)
             BattleStage.Instance.EnterBattleStage(_enemyInGroup);
+
+        // หา EnemyHPDisplay หลัง EnterBattleStage เสมอ
+        _enemyDisplays.Clear();
+        foreach (GameObject obj in _enemyInGroup)
+        {
+            if (obj != null)
+                _enemyDisplays.Add(obj.GetComponentInChildren<EnemyHPDisplay>());
+            else
+                _enemyDisplays.Add(null);
+        }
 
         RefreshUI();
         StartCoroutine(BattleStart());

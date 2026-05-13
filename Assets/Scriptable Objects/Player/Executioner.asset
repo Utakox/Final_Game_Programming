@@ -32,5 +32,5 @@ MonoBehaviour:
   execDoubleHitChance: 0.2
   execBonusUlt: 20
   atkDebuff: 1
-  skillVideo: {fileID: 0}
-  ultimateVideo: {fileID: 0}
+  skillVideo: {fileID: 32900000, guid: 97fd0ce11f0f4414787cf2ea323547bd, type: 3}
+  ultimateVideo: {fileID: 32900000, guid: 2c76300be90757744bcf258d554a80aa, type: 3}

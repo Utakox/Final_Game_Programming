@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65d401cfeb53d94eba313f660220891, type: 3}
   m_Name: Skeleton
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  enemyName: Skeleton
-  maxHP: 60
-  attackPower: 15
-  skillPower: 22
+  enemyName: Skeleton (Lv.3)
+  maxHP: 35
+  attackPower: 10
+  skillPower: 15
   normalAttackChance: 0.7
   canHeal: 0
   healAmount: 15

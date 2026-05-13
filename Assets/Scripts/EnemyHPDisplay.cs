@@ -7,11 +7,13 @@ public class EnemyHPDisplay : MonoBehaviour
     public TextMeshPro hpText;
 
     int _currentHP;
+    string _currentName;
 
     void Start()
     {
         if (enemyData == null) return;
         _currentHP = enemyData.maxHP;
+        _currentName = enemyData.enemyName;
         Refresh();
     }
 
@@ -41,6 +43,6 @@ public class EnemyHPDisplay : MonoBehaviour
     void Refresh()
     {
         if (hpText != null)
-            hpText.text = _currentHP + " / " + enemyData.maxHP;
+            hpText.text = _currentName + "\n" + _currentHP + " / " + enemyData.maxHP;
     }
 }
