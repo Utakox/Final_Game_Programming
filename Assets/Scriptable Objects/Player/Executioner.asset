@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Executioner
   m_EditorClassIdentifier: Assembly-CSharp::HeroData
   heroName: Executioner
-  heroDescription: A hero description
+  heroDescription: 'The Executioner can do double hit damage with their skill and
+    gain double ultimate charge! '
   heroClass: 1
   maxHP: 180
   attackPower: 20

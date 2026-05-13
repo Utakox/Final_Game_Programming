@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: Archer
   m_EditorClassIdentifier: Assembly-CSharp::HeroData
   heroName: Archer
-  heroDescription: A hero description
+  heroDescription: The Archer have 8 skill points and gain 2 skill points per attack!
   heroClass: 2
   maxHP: 80
   attackPower: 20
   skillPower: 35
   maxSP: 8
   spCost: 1
-  spGainAttack: 1
-  spGainSkill: 2
+  spGainAttack: 2
+  spGainSkill: 1
   ultimatePower: 40
   ultimateCost: 70
   ultGainAttack: 15
@@ -32,5 +32,5 @@ MonoBehaviour:
   execDoubleHitChance: 0.4
   execBonusUlt: 20
   atkDebuff: 1
-  skillVideo: {fileID: 0}
+  skillVideo: {fileID: 32900000, guid: 4d8325cc3b16b72428864eeb2e1afffb, type: 3}
   ultimateVideo: {fileID: 32900000, guid: 1496f5f83d73295459cbf10ef20c1bfe, type: 3}

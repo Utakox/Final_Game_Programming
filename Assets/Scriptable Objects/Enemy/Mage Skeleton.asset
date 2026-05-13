@@ -18,5 +18,5 @@ MonoBehaviour:
   skillPower: 10
   normalAttackChance: 0.57
   canHeal: 1
-  healAmount: 5
-  healChance: 0.3
+  healAmount: 15
+  healChance: 0.5

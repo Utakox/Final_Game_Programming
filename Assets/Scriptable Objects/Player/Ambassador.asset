@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Ambassador
   m_EditorClassIdentifier: Assembly-CSharp::HeroData
   heroName: Ambassador
-  heroDescription: A hero description
+  heroDescription: The Ambassador can debuff enemies with their skill! However, it
+    neeeds 3 skill points.
   heroClass: 4
   maxHP: 110
   attackPower: 15

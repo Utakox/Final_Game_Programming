@@ -24,7 +24,7 @@ MonoBehaviour:
   spGainSkill: 0
   ultimatePower: 50
   ultimateCost: 100
-  ultGainAttack: 100
+  ultGainAttack: 50
   ultGainSkill: 20
   canHeal: 1
   healAmount: 25

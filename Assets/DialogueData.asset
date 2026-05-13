@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: DialogueData
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   lines:
-  - Hello, Traveller Im the mayor of this town and we need your help!
-  - There's a pixel monster trying to get through the portal to destroy our town!
+  - Hello, Traveller I am the mayor of this town and we need your help!
+  - There's a monster trying to get through the portal to destroy our town!
   - We need you to destroy all the monster and saves us!
   - The portal is on your right take it! and destroy all of them!
   - Please return safely and good luck Traveller!

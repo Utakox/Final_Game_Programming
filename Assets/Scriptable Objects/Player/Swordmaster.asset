@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Swordmaster
   m_EditorClassIdentifier: Assembly-CSharp::HeroData
   heroName: Swordmaster
-  heroDescription: A hero description
+  heroDescription: The Swordmaster only has 80 ultimate cost! And gain double ultimate
+    charge when using their ability!
   heroClass: 0
   maxHP: 150
   attackPower: 20
@@ -24,7 +25,7 @@ MonoBehaviour:
   spGainSkill: 0
   ultimatePower: 40
   ultimateCost: 80
-  ultGainAttack: 80
+  ultGainAttack: 10
   ultGainSkill: 20
   canHeal: 0
   healAmount: 0

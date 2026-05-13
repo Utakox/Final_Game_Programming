@@ -1451,7 +1451,7 @@ MonoBehaviour:
   heroDescriptionText: {fileID: 1022014220}
   heroStatsText: {fileID: 139192323}
   confirmButton: {fileID: 1527074736}
-  worldSceneName: Desert
+  worldSceneName: Castle
 --- !u!4 &1104307071
 Transform:
   m_ObjectHideFlags: 0
